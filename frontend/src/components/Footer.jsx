@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const Footer = ({ setCurrentPage }) => {
+const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,20 +41,20 @@ const Footer = ({ setCurrentPage }) => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Features</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><button onClick={() => setCurrentPage('builder')} className="hover:text-white transition-colors text-left">Drag & Drop Builder</button></li>
-              <li><button onClick={() => setCurrentPage('builder')} className="hover:text-white transition-colors text-left">Pre-built Components</button></li>
-              <li><button onClick={() => setCurrentPage('builder')} className="hover:text-white transition-colors text-left">Customizable Themes</button></li>
-              <li><button onClick={() => setCurrentPage('builder')} className="hover:text-white transition-colors text-left">Export to HTML</button></li>
+              <li><Link to="/builder" className="hover:text-white transition-colors text-left">Drag & Drop Builder</Link></li>
+              <li><Link to="/builder" className="hover:text-white transition-colors text-left">Pre-built Components</Link></li>
+              <li><Link to="/builder" className="hover:text-white transition-colors text-left">Customizable Themes</Link></li>
+              <li><Link to="/builder" className="hover:text-white transition-colors text-left">Export to HTML</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><button onClick={() => setCurrentPage('help')} className="hover:text-white transition-colors text-left">Help Center</button></li>
-              <li><button onClick={() => setCurrentPage('contact')} className="hover:text-white transition-colors text-left">Contact Us</button></li>
-              <li><button onClick={() => setCurrentPage('privacy')} className="hover:text-white transition-colors text-left">Privacy Policy</button></li>
-              <li><button onClick={() => setCurrentPage('terms')} className="hover:text-white transition-colors text-left">Terms of Service</button></li>
+              <li><Link to="/helpcenter" className="hover:text-white transition-colors text-left">Help Center</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors text-left">Contact Us</Link></li>
+              <li><Link to="/privacy" className="hover:text-white transition-colors text-left">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-white transition-colors text-left">Terms of Service</Link></li>
             </ul>
           </div>
         </div>

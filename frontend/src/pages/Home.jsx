@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const Home = ({ setCurrentPage }) => {
+const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -16,12 +17,12 @@ const Home = ({ setCurrentPage }) => {
               No coding skills required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => setCurrentPage('builder')}
+              <Link
+                to="/builder"
                 className="btn-primary text-lg px-8 py-4"
               >
                 Start Building Now
-              </button>
+              </Link>
               <button className="btn-secondary text-lg px-8 py-4">
                 View Examples
               </button>
@@ -137,12 +138,12 @@ const Home = ({ setCurrentPage }) => {
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
             Join thousands of creators who have built stunning portfolios without writing a single line of code.
           </p>
-          <button
-            onClick={() => setCurrentPage('builder')}
+          <Link
+            to="/builder"
             className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors"
           >
             Start Building for Free
-          </button>
+          </Link>
         </div>
       </section>
     </div>

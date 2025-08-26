@@ -8,8 +8,9 @@ const PortfolioCanvas = ({
   onUpdateComponent,
   canvasSettings 
 }) => {
+
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center">
       <div 
         className="portfolio-canvas w-full max-w-4xl"
         style={{ 

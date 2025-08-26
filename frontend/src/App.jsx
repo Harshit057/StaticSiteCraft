@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Builder from './pages/Builder'
@@ -10,35 +11,23 @@ import Footer from './components/Footer'
 import './App.css'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home')
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'home':
-        return <Home setCurrentPage={setCurrentPage} />
-      case 'builder':
-        return <Builder />
-      case 'help':
-        return <HelpCenter setCurrentPage={setCurrentPage} />
-      case 'contact':
-        return <Contact setCurrentPage={setCurrentPage} />
-      case 'privacy':
-        return <Privacy setCurrentPage={setCurrentPage} />
-      case 'terms':
-        return <TermsOfService setCurrentPage={setCurrentPage} />
-      default:
-        return <Home setCurrentPage={setCurrentPage} />
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
-      <main className="relative z-10">
-        {renderPage()}
-      </main>
-      <Footer setCurrentPage={setCurrentPage} />
-    </div>
+    <Router>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <Navbar />
+        <main className="relative z-10">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/builder" element={<Builder />} />
+            <Route path="/helpcenter" element={<HelpCenter />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   )
 }
 

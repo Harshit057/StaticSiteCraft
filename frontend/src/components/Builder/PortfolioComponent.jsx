@@ -1,8 +1,67 @@
 import React, { useState } from 'react'
 
+// Custom Dropdown Component to fix overflow issues
+const CustomDropdown = ({ value, onChange, options, placeholder, className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const selectedOption = options.find(option => option.value === value)
+
+  return (
+    <div className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-left flex justify-between items-center"
+      >
+        <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <svg 
+          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                onChange(option.value)
+                setIsOpen(false)
+              }}
+              className={`w-full px-3 py-2 text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none ${
+                option.value === value ? 'bg-blue-50 text-blue-600' : 'text-gray-900'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+      
+      {/* Backdrop to close dropdown when clicking outside */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </div>
+  )
+}
+
 const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false)
+  const [isStyleEditing, setIsStyleEditing] = useState(false)
   const [editData, setEditData] = useState({})
+  const [styleData, setStyleData] = useState({})
 
   const startEditing = () => {
     setEditData({
@@ -12,13 +71,37 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
     setIsEditing(true)
   }
 
+  const startStyleEditing = () => {
+    setStyleData({
+      backgroundColor: component.styles?.backgroundColor || '#ffffff',
+      textColor: component.styles?.textColor || '#000000',
+      fontFamily: component.styles?.fontFamily || 'Inter',
+      fontSize: component.styles?.fontSize || '16px',
+      fontWeight: component.styles?.fontWeight || 'normal',
+      padding: component.styles?.padding || '4rem 2rem'
+    })
+    setIsStyleEditing(true)
+  }
+
   const saveChanges = () => {
     onUpdate(editData)
     setIsEditing(false)
   }
 
+  const saveStyleChanges = () => {
+    onUpdate({
+      content: component.content,
+      styles: styleData
+    })
+    setIsStyleEditing(false)
+  }
+
   const cancelEditing = () => {
     setIsEditing(false)
+  }
+
+  const cancelStyleEditing = () => {
+    setIsStyleEditing(false)
   }
 
   const handleContentChange = (field, value) => {
@@ -31,14 +114,273 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
     }))
   }
 
+  const isValidHex = (hex) => {
+    // Accepts #RGB, #RRGGBB, #RGBA, #RRGGBBAA (case-insensitive)
+    return /^#([0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/.test(hex);
+  };
+
+  const formatHex = (value) => {
+    if (!value) return '';
+    if (value[0] !== '#') return '#' + value;
+    return value;
+  };
+
   const handleStyleChange = (field, value) => {
-    setEditData(prev => ({
-      ...prev,
-      styles: {
-        ...prev.styles,
-        [field]: value
+    if (field === 'backgroundColor' || field === 'textColor') {
+      const formatted = formatHex(value);
+      if (isValidHex(formatted)) {
+        setStyleData(prev => ({
+          ...prev,
+          [field]: formatted
+        }));
+      } else {
+        // Allow updating the input even if invalid, but don't update the color
+        setStyleData(prev => ({
+          ...prev,
+          [field]: value
+        }));
       }
-    }))
+    } else {
+      setStyleData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
+  };
+
+  const fontOptions = [
+    { value: 'Inter', label: 'Inter' },
+    { value: 'Roboto', label: 'Roboto' },
+    { value: 'Open Sans', label: 'Open Sans' },
+    { value: 'Lato', label: 'Lato' },
+    { value: 'Poppins', label: 'Poppins' },
+    { value: 'Montserrat', label: 'Montserrat' },
+    { value: 'Source Sans Pro', label: 'Source Sans Pro' },
+    { value: 'Raleway', label: 'Raleway' },
+    { value: 'Ubuntu', label: 'Ubuntu' },
+    { value: 'Nunito', label: 'Nunito' }
+  ]
+
+  const fontWeightOptions = [
+    { value: 'normal', label: 'Normal' },
+    { value: 'bold', label: 'Bold' },
+    { value: '100', label: 'Thin' },
+    { value: '200', label: 'Extra Light' },
+    { value: '300', label: 'Light' },
+    { value: '400', label: 'Regular' },
+    { value: '500', label: 'Medium' },
+    { value: '600', label: 'Semi Bold' },
+    { value: '700', label: 'Bold' },
+    { value: '800', label: 'Extra Bold' },
+    { value: '900', label: 'Black' }
+  ]
+
+  const fontSizeOptions = [
+    { value: '12px', label: '12px' },
+    { value: '14px', label: '14px' },
+    { value: '16px', label: '16px' },
+    { value: '18px', label: '18px' },
+    { value: '20px', label: '20px' },
+    { value: '24px', label: '24px' },
+    { value: '28px', label: '28px' },
+    { value: '32px', label: '32px' },
+    { value: '36px', label: '36px' },
+    { value: '48px', label: '48px' }
+  ]
+
+  const renderStyleEditor = () => {
+    if (!isStyleEditing) return null
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[85vh] overflow-y-auto">
+          <h3 className="text-xl font-bold mb-4">Edit Section Styles</h3>
+          
+          <div className="space-y-4">
+            {/* Background Color */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Background Color
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={styleData.backgroundColor}
+                  onChange={(e) => handleStyleChange('backgroundColor', e.target.value)}
+                  className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                />
+                <div className="flex flex-col flex-1">
+                  <label className="text-xs text-gray-500 mb-1 ml-1" htmlFor="bg-hex-input">Hex Code</label>
+                  <input
+                    id="bg-hex-input"
+                    type="text"
+                    value={styleData.backgroundColor}
+                    onChange={(e) => handleStyleChange('backgroundColor', e.target.value)}
+                    className={`px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-900 bg-white ${isValidHex(formatHex(styleData.backgroundColor)) ? 'border-gray-300' : 'border-red-500'}`}
+                    placeholder="#ffffff"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Text Color */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Text Color
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={styleData.textColor}
+                  onChange={(e) => handleStyleChange('textColor', e.target.value)}
+                  className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                />
+                <div className="flex flex-col flex-1">
+                  <label className="text-xs text-gray-500 mb-1 ml-1" htmlFor="text-hex-input">Hex Code</label>
+                  <input
+                    id="text-hex-input"
+                    type="text"
+                    value={styleData.textColor}
+                    onChange={(e) => handleStyleChange('textColor', e.target.value)}
+                    className={`px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-900 bg-white ${isValidHex(formatHex(styleData.textColor)) ? 'border-gray-300' : 'border-red-500'}`}
+                    placeholder="#000000"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Font Family */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Font Family
+              </label>
+              <CustomDropdown
+                value={styleData.fontFamily}
+                onChange={(value) => handleStyleChange('fontFamily', value)}
+                options={fontOptions}
+                placeholder="Select Font"
+                className="w-full"
+              />
+            </div>
+
+            {/* Font Size */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Font Size
+              </label>
+              <CustomDropdown
+                value={styleData.fontSize}
+                onChange={(value) => handleStyleChange('fontSize', value)}
+                options={fontSizeOptions}
+                placeholder="Select Font Size"
+                className="w-full"
+              />
+            </div>
+
+            {/* Font Weight */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Font Weight
+              </label>
+              <CustomDropdown
+                value={styleData.fontWeight}
+                onChange={(value) => handleStyleChange('fontWeight', value)}
+                options={fontWeightOptions}
+                placeholder="Select Font Weight"
+                className="w-full"
+              />
+            </div>
+
+            {/* Padding */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Padding
+              </label>
+              <CustomDropdown
+                value={styleData.padding}
+                onChange={(value) => handleStyleChange('padding', value)}
+                options={[
+                  { value: '2rem 1rem', label: 'Small (2rem 1rem)' },
+                  { value: '4rem 2rem', label: 'Medium (4rem 2rem)' },
+                  { value: '6rem 2rem', label: 'Large (6rem 2rem)' },
+                  { value: '8rem 2rem', label: 'Extra Large (8rem 2rem)' },
+                ]}
+                placeholder="Select Padding"
+                className="w-full"
+              />
+            </div>
+
+            {/* Preview */}
+            <div className="mt-6 p-4 border border-gray-200 rounded-md">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">Preview</h4>
+              <div
+                className="p-4 rounded"
+                style={{
+                  backgroundColor: styleData.backgroundColor,
+                  color: styleData.textColor,
+                  fontFamily: styleData.fontFamily,
+                  fontSize: styleData.fontSize,
+                  fontWeight: styleData.fontWeight,
+                  padding: styleData.padding
+                }}
+              >
+                <p>This is how your section will look with the selected styles.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Profile Image Style Controls (Header Only) */}
+          {component.type === 'header' && (
+            <div className="space-y-2 mt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image Width (px)</label>
+              <input
+                type="number"
+                min="40"
+                max="512"
+                value={styleData.profileImageWidth ? parseInt(styleData.profileImageWidth) : 112}
+                onChange={e => handleStyleChange('profileImageWidth', e.target.value + 'px')}
+                className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-900 bg-white"
+              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image Height (px)</label>
+              <input
+                type="number"
+                min="40"
+                max="512"
+                value={styleData.profileImageHeight ? parseInt(styleData.profileImageHeight) : 112}
+                onChange={e => handleStyleChange('profileImageHeight', e.target.value + 'px')}
+                className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-900 bg-white"
+              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image Edges</label>
+              <select
+                value={styleData.profileImageBorderRadius || '50%'}
+                onChange={e => handleStyleChange('profileImageBorderRadius', e.target.value)}
+                className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-900 bg-white"
+              >
+                <option value="50%">Circle</option>
+                <option value="1rem">Rounded</option>
+                <option value="0.25rem">Slightly Rounded</option>
+                <option value="0">Square</option>
+              </select>
+            </div>
+          )}
+
+          <div className="flex justify-end space-x-3 mt-6">
+            <button
+              onClick={cancelStyleEditing}
+              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={saveStyleChanges}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Save Styles
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const renderComponent = () => {
@@ -48,15 +390,51 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
       case 'header':
         return (
           <div 
-            className="text-center py-20 px-8"
+            className="text-center py-20 px-8 flex flex-col items-center justify-center"
             style={{ 
               backgroundColor: styles.backgroundColor,
               color: styles.textColor,
+              fontFamily: styles.fontFamily,
+              fontSize: styles.fontSize,
+              fontWeight: styles.fontWeight,
               padding: styles.padding
             }}
           >
             {isEditing ? (
-              <div className="space-y-4">
+              <div className="space-y-4 w-full flex flex-col items-center">
+                {/* Profile Image Upload */}
+                <div className="flex flex-col items-center">
+                  {editData.content?.profileImage && (
+                    <img
+                      src={editData.content.profileImage}
+                      alt="Profile"
+                      style={{
+                        width: editData.styles?.profileImageWidth || '112px',
+                        height: editData.styles?.profileImageHeight || '112px',
+                        borderRadius: editData.styles?.profileImageBorderRadius || '50%',
+                        objectFit: 'cover',
+                        marginBottom: '0.5rem',
+                        border: '4px solid white',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                      }}
+                    />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          handleContentChange('profileImage', reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="mb-2"
+                  />
+                </div>
                 <input
                   type="text"
                   value={editData.content?.title || ''}
@@ -94,11 +472,29 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
                 </div>
               </div>
             ) : (
-              <>
-                <h1 className="text-5xl font-bold mb-4">{content.title}</h1>
-                <h2 className="text-2xl mb-6 opacity-90">{content.subtitle}</h2>
-                <p className="text-xl max-w-2xl mx-auto opacity-80">{content.description}</p>
-              </>
+              <div className="flex flex-col sm:flex-row items-center justify-center w-full">
+                {content.profileImage && (
+                  <img
+                    src={content.profileImage}
+                    alt="Profile"
+                    style={{
+                      width: styles.profileImageWidth || '128px',
+                      height: styles.profileImageHeight || '128px',
+                      borderRadius: styles.profileImageBorderRadius || '50%',
+                      objectFit: 'cover',
+                      marginBottom: '1rem',
+                      marginRight: '2rem',
+                      border: '4px solid white',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                )}
+                <div className="flex flex-col items-center sm:items-start">
+                  <h1 className="text-5xl font-bold mb-4">{content.title}</h1>
+                  <h2 className="text-2xl mb-6 opacity-90">{content.subtitle}</h2>
+                  <p className="text-xl max-w-2xl mx-auto opacity-80 text-center sm:text-left">{content.description}</p>
+                </div>
+              </div>
             )}
           </div>
         )
@@ -110,6 +506,9 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
             style={{ 
               backgroundColor: styles.backgroundColor,
               color: styles.textColor,
+              fontFamily: styles.fontFamily,
+              fontSize: styles.fontSize,
+              fontWeight: styles.fontWeight,
               padding: styles.padding
             }}
           >
@@ -164,6 +563,9 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
             style={{ 
               backgroundColor: styles.backgroundColor,
               color: styles.textColor,
+              fontFamily: styles.fontFamily,
+              fontSize: styles.fontSize,
+              fontWeight: styles.fontWeight,
               padding: styles.padding
             }}
           >
@@ -271,6 +673,9 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
             style={{ 
               backgroundColor: styles.backgroundColor,
               color: styles.textColor,
+              fontFamily: styles.fontFamily,
+              fontSize: styles.fontSize,
+              fontWeight: styles.fontWeight,
               padding: styles.padding
             }}
           >
@@ -407,6 +812,9 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
             style={{ 
               backgroundColor: styles.backgroundColor,
               color: styles.textColor,
+              fontFamily: styles.fontFamily,
+              fontSize: styles.fontSize,
+              fontWeight: styles.fontWeight,
               padding: styles.padding
             }}
           >
@@ -507,17 +915,30 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
         className={`relative ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}
         onClick={onSelect}
       >
-        {isSelected && !isEditing && (
-          <div className="absolute -top-2 -right-2 z-10">
+        {isSelected && !isEditing && !isStyleEditing && (
+          <div className="absolute -top-2 -right-2 z-10 flex space-x-2">
             <button
               onClick={(e) => {
                 e.stopPropagation()
                 startEditing()
               }}
               className="bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+              title="Edit Content"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                startStyleEditing()
+              }}
+              className="bg-purple-500 text-white p-2 rounded-full shadow-lg hover:bg-purple-600 transition-colors"
+              title="Edit Styles"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
               </svg>
             </button>
           </div>
@@ -526,6 +947,7 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
         {renderComponent()}
       </div>
 
+      {renderStyleEditor()}
     </>
   )
 }

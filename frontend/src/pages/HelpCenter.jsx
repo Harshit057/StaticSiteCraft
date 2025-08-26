@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const HelpCenter = ({ setCurrentPage }) => {
+const HelpCenter = () => {
   const faqs = [
     {
       question: "How do I create my first portfolio?",
@@ -35,15 +36,15 @@ const HelpCenter = ({ setCurrentPage }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <button
-                onClick={() => setCurrentPage('home')}
+              <Link
+                to="/"
                 className="text-blue-600 hover:text-blue-800 transition-colors mb-4 flex items-center"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
                 Back to Home
-              </button>
+              </Link>
               <h1 className="text-4xl font-bold text-gray-900">Help Center</h1>
               <p className="text-xl text-gray-600 mt-2">Find answers to common questions and get support</p>
             </div>
@@ -98,12 +99,12 @@ const HelpCenter = ({ setCurrentPage }) => {
         <div className="bg-blue-50 rounded-lg p-8 mt-12 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Still Need Help?</h2>
           <p className="text-gray-600 mb-6">Can't find what you're looking for? Our support team is here to help.</p>
-          <button
-            onClick={() => setCurrentPage('contact')}
+          <Link
+            to="/contact"
             className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Contact Support
-          </button>
+          </Link>
         </div>
       </div>
     </div>

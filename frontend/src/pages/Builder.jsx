@@ -133,6 +133,7 @@ const Builder = () => {
             onDeleteComponent={deleteComponent}
             canvasSettings={canvasSettings}
             onUpdateCanvasSettings={setCanvasSettings}
+            components={components}
           />
         </div>
 
