@@ -59,20 +59,37 @@ const Builder = () => {
         return {
           title: 'Featured Projects',
           projects: [
-            {
-              title: 'Project One',
-              description: 'Description of your first project',
-              technologies: ['React', 'Node.js', 'MongoDB'],
-              image: null
-            }
+            { title: 'Project One', description: 'Description of your first project', technologies: ['React', 'Node.js', 'MongoDB'], image: null }
+          ]
+        }
+      case 'education':
+        return {
+          title: 'Education',
+          schools: [
+            { school: 'University Name', degree: 'B.Sc. in Computer Science', year: '2020' }
+          ]
+        }
+      case 'experience':
+        return {
+          title: 'Experience',
+          jobs: [
+            { company: 'Company Name', role: 'Job Title', period: '2021-2023', description: 'Describe your role and achievements.' }
+          ]
+        }
+      case 'social':
+        return {
+          title: 'Connect with Me',
+          links: [
+            { platform: 'LinkedIn', url: 'https://linkedin.com/in/yourprofile' },
+            { platform: 'GitHub', url: 'https://github.com/yourusername' }
           ]
         }
       case 'contact':
         return {
-          title: 'Get In Touch',
-          email: 'your.email@example.com',
-          phone: '+1 (555) 123-4567',
-          location: 'Your City, Country'
+          title: 'Contact Me',
+          email: 'your@email.com',
+          phone: '',
+          message: 'Feel free to reach out!'
         }
       default:
         return {}
@@ -82,37 +99,23 @@ const Builder = () => {
   const getDefaultStyles = (type) => {
     switch (type) {
       case 'header':
-        return {
-          backgroundColor: '#667eea',
-          textColor: '#ffffff',
-          padding: '80px 20px'
-        }
+        return { backgroundColor: '#f3f4f6', textColor: '#1e293b', padding: '3rem 1rem' }
       case 'about':
-        return {
-          backgroundColor: '#ffffff',
-          textColor: '#333333',
-          padding: '60px 20px'
-        }
+        return { backgroundColor: '#fff', textColor: '#222', padding: '2rem 1rem' }
       case 'skills':
-        return {
-          backgroundColor: '#f8fafc',
-          textColor: '#333333',
-          padding: '60px 20px'
-        }
+        return { backgroundColor: '#fef9c3', textColor: '#92400e', padding: '2rem 1rem' }
       case 'projects':
-        return {
-          backgroundColor: '#ffffff',
-          textColor: '#333333',
-          padding: '60px 20px'
-        }
+        return { backgroundColor: '#ede9fe', textColor: '#4c1d95', padding: '2rem 1rem' }
+      case 'education':
+        return { backgroundColor: '#e0e7ff', textColor: '#3730a3', padding: '2rem 1rem' }
+      case 'experience':
+        return { backgroundColor: '#ffedd5', textColor: '#7c2d12', padding: '2rem 1rem' }
+      case 'social':
+        return { backgroundColor: '#cffafe', textColor: '#155e75', padding: '2rem 1rem' }
       case 'contact':
-        return {
-          backgroundColor: '#1e293b',
-          textColor: '#ffffff',
-          padding: '60px 20px'
-        }
+        return { backgroundColor: '#fee2e2', textColor: '#991b1b', padding: '2rem 1rem' }
       default:
-        return {}
+        return { backgroundColor: '#fff', textColor: '#222', padding: '2rem' }
     }
   }
 
@@ -152,4 +155,4 @@ const Builder = () => {
   )
 }
 
-export default Builder 
+export default Builder

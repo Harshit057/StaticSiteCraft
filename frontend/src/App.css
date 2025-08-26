@@ -1,3 +1,11 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.7s cubic-bezier(0.4,0,0.2,1) both;
+}
 /* Custom styles for portfolio builder */
 .draggable-component {
   cursor: grab;

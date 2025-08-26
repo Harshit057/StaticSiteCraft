@@ -119,7 +119,7 @@ const Toolbar = ({
                         <h2 class="text-3xl font-bold mb-12">${content.title}</h2>
                         <div class="grid md:grid-cols-3 gap-8">
                             <div class="space-y-2">
-                                <div class="text-2xl mb-2">📧</div>
+                                <div class="text-2xl mb-2 transition-transform duration-300 hover:scale-125 hover:text-blue-500 animate-fadeIn"><span style="display:inline-block;vertical-align:middle"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4h20v16H2V4zm2 2v12h16V6H4zm8 5.5l8-5.5H4l8 5.5zm0 2.5l-8-5.5V18h16V8.5l-8 5.5z" fill="currentColor"/></svg></span></div>
                                 <h3 class="font-semibold">Email</h3>
                                 <p class="opacity-80">${content.email}</p>
                             </div>

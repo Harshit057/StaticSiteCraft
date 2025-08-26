@@ -805,6 +805,132 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
           </div>
         )
 
+
+      case 'education':
+        return (
+          <div className="py-16 px-8" style={{ backgroundColor: styles.backgroundColor, color: styles.textColor, fontFamily: styles.fontFamily, fontSize: styles.fontSize, fontWeight: styles.fontWeight, padding: styles.padding }}>
+            <div className="max-w-4xl mx-auto">
+              {isEditing ? (
+                <div className="space-y-6">
+                  <input type="text" value={editData.content?.title || ''} onChange={e => handleContentChange('title', e.target.value)} className="text-3xl font-bold mb-8 text-center bg-transparent border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none w-full" placeholder="Education" />
+                  <div className="space-y-4">
+                    {editData.content?.schools?.map((school, index) => (
+                      <div key={index} className="flex flex-col md:flex-row md:space-x-4 items-center">
+                        <input type="text" value={school.school} onChange={e => { const newSchools = [...editData.content.schools]; newSchools[index] = { ...school, school: e.target.value }; handleContentChange('schools', newSchools); }} className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 md:mb-0" placeholder="School Name" />
+                        <input type="text" value={school.degree} onChange={e => { const newSchools = [...editData.content.schools]; newSchools[index] = { ...school, degree: e.target.value }; handleContentChange('schools', newSchools); }} className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 md:mb-0" placeholder="Degree" />
+                        <input type="text" value={school.year} onChange={e => { const newSchools = [...editData.content.schools]; newSchools[index] = { ...school, year: e.target.value }; handleContentChange('schools', newSchools); }} className="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Year" />
+                        <button onClick={() => { const newSchools = editData.content.schools.filter((_, i) => i !== index); handleContentChange('schools', newSchools); }} className="px-3 py-2 text-red-600 hover:text-red-800">×</button>
+                      </div>
+                    ))}
+                    <button onClick={() => { const newSchools = [...(editData.content.schools || []), { school: '', degree: '', year: '' }]; handleContentChange('schools', newSchools); }} className="w-full px-4 py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50">Add School</button>
+                  </div>
+                  <div className="flex justify-center space-x-4 mt-6">
+                    <button onClick={saveChanges} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Save</button>
+                    <button onClick={cancelEditing} className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-bold mb-8 text-center">{content.title}</h2>
+                  <div className="space-y-6">
+                    {content.schools?.map((school, index) => (
+                      <div key={index} className="flex flex-col md:flex-row md:space-x-4 items-center justify-between bg-white bg-opacity-70 rounded-lg p-4 shadow">
+                        <div className="font-semibold text-lg">{school.school}</div>
+                        <div className="text-gray-700">{school.degree}</div>
+                        <div className="text-gray-500">{school.year}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )
+
+      case 'experience':
+        return (
+          <div className="py-16 px-8" style={{ backgroundColor: styles.backgroundColor, color: styles.textColor, fontFamily: styles.fontFamily, fontSize: styles.fontSize, fontWeight: styles.fontWeight, padding: styles.padding }}>
+            <div className="max-w-4xl mx-auto">
+              {isEditing ? (
+                <div className="space-y-6">
+                  <input type="text" value={editData.content?.title || ''} onChange={e => handleContentChange('title', e.target.value)} className="text-3xl font-bold mb-8 text-center bg-transparent border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none w-full" placeholder="Experience" />
+                  <div className="space-y-4">
+                    {editData.content?.jobs?.map((job, index) => (
+                      <React.Fragment key={index}>
+                        <div className="flex flex-col md:flex-row md:space-x-4 items-center">
+                          <input type="text" value={job.company} onChange={e => { const newJobs = [...editData.content.jobs]; newJobs[index] = { ...job, company: e.target.value }; handleContentChange('jobs', newJobs); }} className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 md:mb-0" placeholder="Company Name" />
+                          <input type="text" value={job.role} onChange={e => { const newJobs = [...editData.content.jobs]; newJobs[index] = { ...job, role: e.target.value }; handleContentChange('jobs', newJobs); }} className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 md:mb-0" placeholder="Role" />
+                          <input type="text" value={job.period} onChange={e => { const newJobs = [...editData.content.jobs]; newJobs[index] = { ...job, period: e.target.value }; handleContentChange('jobs', newJobs); }} className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Period" />
+                          <button onClick={() => { const newJobs = editData.content.jobs.filter((_, i) => i !== index); handleContentChange('jobs', newJobs); }} className="px-3 py-2 text-red-600 hover:text-red-800">×</button>
+                        </div>
+                        <textarea value={job.description} onChange={e => { const newJobs = [...editData.content.jobs]; newJobs[index] = { ...job, description: e.target.value }; handleContentChange('jobs', newJobs); }} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2" rows={2} placeholder="Describe your role and achievements." />
+                      </React.Fragment>
+                    ))}
+                    <button onClick={() => { const newJobs = [...(editData.content.jobs || []), { company: '', role: '', period: '', description: '' }]; handleContentChange('jobs', newJobs); }} className="w-full px-4 py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50">Add Job</button>
+                  </div>
+                  <div className="flex justify-center space-x-4 mt-6">
+                    <button onClick={saveChanges} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Save</button>
+                    <button onClick={cancelEditing} className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-bold mb-8 text-center">{content.title}</h2>
+                  <div className="space-y-6">
+                    {content.jobs?.map((job, index) => (
+                      <div key={index} className="flex flex-col md:flex-row md:space-x-4 items-center justify-between bg-white bg-opacity-70 rounded-lg p-4 shadow">
+                        <div className="font-semibold text-lg">{job.company}</div>
+                        <div className="text-gray-700">{job.role}</div>
+                        <div className="text-gray-500">{job.period}</div>
+                        <div className="text-gray-600 w-full md:w-1/2 mt-2 md:mt-0">{job.description}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )
+
+      case 'social':
+        return (
+          <div className="py-16 px-8" style={{ backgroundColor: styles.backgroundColor, color: styles.textColor, fontFamily: styles.fontFamily, fontSize: styles.fontSize, fontWeight: styles.fontWeight, padding: styles.padding }}>
+            <div className="max-w-4xl mx-auto text-center">
+              {isEditing ? (
+                <div className="space-y-6">
+                  <input type="text" value={editData.content?.title || ''} onChange={e => handleContentChange('title', e.target.value)} className="text-3xl font-bold mb-8 text-center bg-transparent border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none w-full" placeholder="Connect with Me" />
+                  <div className="space-y-4">
+                    {editData.content?.links?.map((link, index) => (
+                      <div key={index} className="flex flex-col md:flex-row md:space-x-4 items-center">
+                        <input type="text" value={link.platform} onChange={e => { const newLinks = [...editData.content.links]; newLinks[index] = { ...link, platform: e.target.value }; handleContentChange('links', newLinks); }} className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 md:mb-0" placeholder="Platform (e.g. LinkedIn)" />
+                        <input type="text" value={link.url} onChange={e => { const newLinks = [...editData.content.links]; newLinks[index] = { ...link, url: e.target.value }; handleContentChange('links', newLinks); }} className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="URL" />
+                        <button onClick={() => { const newLinks = editData.content.links.filter((_, i) => i !== index); handleContentChange('links', newLinks); }} className="px-3 py-2 text-red-600 hover:text-red-800">×</button>
+                      </div>
+                    ))}
+                    <button onClick={() => { const newLinks = [...(editData.content.links || []), { platform: '', url: '' }]; handleContentChange('links', newLinks); }} className="w-full px-4 py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50">Add Link</button>
+                  </div>
+                  <div className="flex justify-center space-x-4 mt-6">
+                    <button onClick={saveChanges} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Save</button>
+                    <button onClick={cancelEditing} className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-bold mb-8">{content.title}</h2>
+                  <div className="flex flex-wrap justify-center gap-6">
+                    {content.links?.map((link, index) => (
+                      <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-100 text-blue-800 rounded-full font-semibold hover:bg-blue-200 transition-colors">
+                        <span>{link.platform}</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                      </a>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )
+
       case 'contact':
         return (
           <div 
@@ -830,7 +956,7 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
                   />
                   <div className="grid md:grid-cols-3 gap-8">
                     <div className="space-y-2">
-                      <div className="text-2xl mb-2">📧</div>
+                      <div className="text-2xl mb-2 transition-transform duration-300 hover:scale-125 hover:text-blue-500 animate-fadeIn"><span style={{display:'inline-block',verticalAlign:'middle'}}><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4h20v16H2V4zm2 2v12h16V6H4zm8 5.5l8-5.5H4l8 5.5zm0 2.5l-8-5.5V18h16V8.5l-8 5.5z" fill="currentColor"/></svg></span></div>
                       <h3 className="font-semibold">Email</h3>
                       <input
                         type="email"
@@ -883,7 +1009,7 @@ const PortfolioComponent = ({ component, isSelected, onSelect, onUpdate }) => {
                   <h2 className="text-3xl font-bold mb-12">{content.title}</h2>
                   <div className="grid md:grid-cols-3 gap-8">
                     <div className="space-y-2">
-                      <div className="text-2xl mb-2">📧</div>
+                      <div className="text-2xl mb-2"><span style={{display:'inline-block',verticalAlign:'middle'}}><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4h20v16H2V4zm2 2v12h16V6H4zm8 5.5l8-5.5H4l8 5.5zm0 2.5l-8-5.5V18h16V8.5l-8 5.5z" fill="currentColor"/></svg></span></div>
                       <h3 className="font-semibold">Email</h3>
                       <p className="opacity-80">{content.email}</p>
                     </div>
